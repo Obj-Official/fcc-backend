@@ -1,23 +1,35 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb://127.0.0.1:27017/first-cardiology', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB Connected'))
-.catch(err => console.error('MongoDB Connection Error:', err));
+// mongoose.connect(process.env.MONGODB_CONNECT_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// })
+// .then(() => console.log('MongoDB Connected'))
+// .catch(err => console.error('MongoDB Connection Error:', err));
+
+const connectDB = async()=>{
+    try {
+        await mongoose.connect(process.env.MONGODB_CONNECT_URI)
+        console.log('MongoDB Connected')
+    }catch (error){
+        console.log('MongoDB Connection Error:', error);   
+    }
+}
+connectDB()
 
 const Booking = require('./models/Booking');
 
 app.get('/allbookings', async(req, res)=>{
     const bookings = await Booking.find();
+
     res.json(bookings);
 });
 
@@ -142,4 +154,5 @@ app.post('/newbooking', async (req, res) => {
     }
 });
 
-app.listen(5000, () => console.log('Server connected on port 5000'));
+const port = process.env.PORT
+app.listen(port, () => console.log('Server connected on port ' + port));

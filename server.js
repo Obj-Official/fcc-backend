@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// mongoose.connect(process.env.MONGODB_CONNECT_URI, {
+// mongoose.connect(process.env.LOCAL_MONGODB, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true
 // })
@@ -155,4 +155,4 @@ app.post('/newbooking', async (req, res) => {
 });
 
 const port = process.env.PORT
-app.listen(port, () => console.log('Server connected on port ' + port));
+app.listen(port, "0.0.0.0", () => console.log('Server connected on port ' + port));
